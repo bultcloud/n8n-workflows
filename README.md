@@ -1,218 +1,161 @@
-Telegram AI Personal Assistant (n8n + Bult.ai)
+# 🤖 Telegram AI Personal Assistant
+
+> **A comprehensive AI assistant powered by n8n and Bult.ai that integrates with Google services**
+
+Transform your Telegram bot into a powerful AI assistant that seamlessly manages your digital life. This workflow provides intelligent automation for Gmail, Google Tasks, Calendar, and Contacts - all through natural language commands.
+
+## ✨ Features
+
+- 📧 **Gmail Integration** - Read and compose emails
+- ✅ **Google Tasks** - Create and manage your task lists  
+- 📅 **Google Calendar** - View and schedule events
+- 👥 **Google Contacts** - Search and add contacts
+- 🎙️ **Voice Commands** - Process voice messages with automatic transcription
+- 🧠 **Smart Routing** - ChatGPT automatically selects the right tool for each request
+- ☁️ **Always Online** - Runs 24/7 on cloud infrastructure
+
+## 🚀 Quick Start
+
+### 1. Deploy n8n on Bult.ai
+
+1. Visit [bult.ai](https://bult.ai) and create an account
+2. Navigate to **Dashboard** → **New Project** → choose any name
+3. Select **Create** → **Templates** → **n8n**
+4. Click **Apply** → **Deploy**
+5. Open your n8n URL (e.g., `https://your-project.fin1.bult.app/`)
+6. Register and verify using the email code
+
+Your cloud-hosted n8n editor is now running! ✅
+
+### 2. Import the Workflow
+
+1. Open the [n8n workflows repository](https://github.com/bultcloud/n8n-workflows)
+2. Find and copy the contents of `bult-assistant.json`
+3. In n8n: **Create Workflow** → paste (`Ctrl+V`) → **Save**
+
+The workflow is now loaded into your n8n instance! ✅
+
+### 3. Connect Your Telegram Bot
+
+1. Open Telegram and search for `@BotFather`
+2. Send the following commands:
+   ```
+   /start
+   /newbot
+   ```
+3. Follow the prompts and copy the API token
+4. In n8n:
+   - Open the **Telegram Trigger** node
+   - Create a new **Telegram credential**
+   - Paste the token and save
+
+Your Telegram bot is connected! ✅
+
+### 4. Set Up Google Integrations (OAuth)
+
+#### Google Cloud Console Setup
+1. Go to [Google Cloud Console](https://console.cloud.google.com) and create a project
+2. Navigate to **APIs & Services** → **OAuth Consent Screen**
+   - Fill required fields and publish
+3. Go to **Credentials** → **Create Credentials** → **OAuth Client ID** → **Web Application**
+4. Copy the **Client ID** and **Client Secret**
+
+#### n8n OAuth Configuration
+1. In n8n, open any Google node
+2. Create a new **Google OAuth2 credential**
+3. Paste **Client ID** and **Client Secret**
+4. Use the Redirect URI shown in n8n: `your-bult-url/rest/oauth2-credential/callback`
+5. Click **Connect** → log in → allow permissions
+
+#### Enable Required APIs
+Enable these APIs in Google Cloud Console:
+- ✅ Gmail API
+- ✅ Google Calendar API  
+- ✅ Google Tasks API
+- ✅ People API (for Contacts)
+
+Google authentication is complete! ✅
+
+## 🧠 What Your Assistant Can Do
+
+### 📧 Gmail: Read & Write Emails
+```
+"Show me unread emails"
+"Send an email to Sarah saying I will be late"
+```
+
+### ✅ Google Tasks: List & Create Tasks
+```
+"What tasks do I have today?"
+"Create a task: prepare presentation"
+```
+
+### 👥 Google Contacts: View & Add Contacts
+```
+"Who is Daniel in my contacts?"
+"Add a contact: John Smith, john@example.com"
+```
+
+### 📅 Google Calendar: View & Create Events
+```
+"What events do I have tomorrow?"
+"Create an event tomorrow at 3 PM: project meeting"
+```
 
-This workflow turns your Telegram bot into a full AI assistant that can:
+### 🎙️ Voice Commands
+- Send any voice message
+- Automatic transcription → ChatGPT interpretation → action execution
 
-Read and write Gmail emails
+### 🔀 Automatic Tool Selection
+The AI intelligently routes your requests to:
+- Gmail
+- Google Tasks  
+- Google Contacts
+- Google Calendar
+- Or provides a conversational response
 
-List and create Google Tasks
+*No manual switching required!*
 
-View and create Google Calendar events
+## 🧪 Testing & Activation
 
-View and create Google Contacts
+1. In n8n: click **Execute Workflow**
+2. In Telegram: send a message or voice note
+3. The assistant will reply instantly
+4. If everything works → **Activate** the workflow for 24/7 operation
 
-Process both text and voice messages
+## 🔧 Optional Enhancements
 
-Think with ChatGPT and route actions automatically
+Extend functionality by adding nodes for:
+- 📝 Task updates & deletions
+- 🔄 Calendar event modifications  
+- 🔍 Advanced contact filtering
+- 📊 Inbox summaries
+- ⏰ Smart reminders
+- 🔌 Integration with other APIs
 
-The entire system runs on n8n deployed on Bult.ai, so it’s always online.
+n8n provides complete flexibility for customization.
 
- 1. Deploy n8n on Bult.ai
+## 📋 Summary
 
-Go to https://bult.ai
- → create an account.
+This assistant provides a fully automated, always-available AI secretary that:
 
-Dashboard → New Project → choose any name.
+- ☁️ Runs in the cloud
+- ⚡ Responds instantly on Telegram  
+- 🔗 Integrates with Gmail, Calendar, Tasks, and Contacts
+- 🎙️ Handles both text and voice commands
+- ✍️ Writes emails and creates tasks/events/contacts on command
 
-Inside the project → Create → Templates → n8n.
+## 🏁 Quick Setup Checklist
 
-Click Apply → Deploy.
+- [ ] Deploy n8n on Bult.ai
+- [ ] Import `bult-assistant.json`
+- [ ] Connect Telegram bot
+- [ ] Configure Google OAuth
+- [ ] Test the workflow
+- [ ] Activate for 24/7 operation
 
-When ready, open your n8n URL, e.g.:
+**That's it! Your AI assistant is ready to work.** 🎉
 
-https://your-project.fin1.bult.app/
+---
 
-
-Register → verify using the email code.
-
-Your cloud-hosted n8n editor is now running.
-
- 2. Import the Workflow from GitHub
-
-Open the repo:
-https://github.com/bultcloud/n8n-workflows
-
-Find bult-assistant.json.
-
-Copy the entire file contents.
-
-In n8n → Create Workflow → paste (Ctrl+V).
-
-Save.
-
-The workflow is now loaded into your n8n instance.
-
- 3. Connect Your Telegram Bot
-
-Open Telegram → search @BotFather.
-
-Send:
-
-/start
-/newbot
-
-
-Follow the prompts → copy the API token.
-
-In n8n:
-
-Open the Telegram Trigger node
-
-Create a new Telegram credential
-
-Paste the token
-
-Save
-
-Your Telegram bot is now connected and ready to receive messages.
-
- 4. Set Up Google Integrations (OAuth)
-
-The workflow uses Gmail, Calendar, Tasks, and Contacts (People API).
-You only need to set up OAuth once.
-
-Steps:
-
-Go to Google Cloud Console → create a project.
-
-Go to:
-APIs & Services → OAuth Consent Screen
-Fill required fields and publish.
-
-Go to:
-Credentials → Create Credentials → OAuth Client ID → Web Application
-
-Copy Client ID and Client Secret.
-
-In n8n, open any Google node → create a new Google OAuth2 credential.
-
-Paste Client ID + Client Secret.
-
-Use the Redirect URI shown in n8n (your Bult URL + /rest/oauth2-credential/callback).
-
-Click Connect → log in → allow permissions.
-
-Enable APIs:
-
-Search and enable:
-
-Gmail API
-
-Google Calendar API
-
-Google Tasks API
-
-People API
-
-Google authentication is now complete.
-
- 5. What Your Assistant Can Do
- Gmail: Read & Write Emails
-
-“Show me unread emails.”
-
-“Send an email to Sarah saying I will be late.”
-
- Google Tasks: List & Create Tasks
-
-“What tasks do I have today?”
-
-“Create a task: prepare presentation.”
-
- Google Contacts: View & Add Contacts
-
-“Who is Daniel in my contacts?”
-
-“Add a contact: John Smith, john@example.com
-.”
-
- Google Calendar: View & Create Events
-
-“What events do I have tomorrow?”
-
-“Create an event tomorrow at 3 PM: project meeting.”
-
- Voice Commands
-
-Send any voice message
-
-It gets transcribed → ChatGPT interprets → action executed
-
- Automatic Tool Selection
-
-The AI decides internally whether your request requires:
-
-Gmail
-
-Google Tasks
-
-Google Contacts
-
-Google Calendar
-
-Or just a normal chat response
-
-No manual switching needed.
-
- 6. Test the Workflow
-
-In n8n → click Execute Workflow.
-
-In Telegram → send a message or voice note.
-
-The assistant will reply instantly.
-
-If everything works correctly → Activate the workflow so it runs automatically 24/7.
-
- 7. Optional Enhancements
-
-You can easily extend this project by adding nodes for:
-
-Task updates & deletions
-
-Calendar event modifications
-
-Contact lookups with filters
-
-Automatic summaries of inboxes
-
-Smart reminders
-
-Integration with other APIs or databases
-
-n8n gives you full flexibility.
-
- Summary
-
-This assistant gives you a fully automated, always-available AI secretary that:
-
-Runs in the cloud
-
-Responds instantly on Telegram
-
-Uses your Gmail, Calendar, Tasks, and Contacts
-
-Handles both text and voice
-
-Writes emails and creates tasks/events/contacts on command
-
-All you need to do is:
-
-Deploy n8n on Bult.ai
-
-Import bult-assistant.json
-
-Connect Telegram
-
-Connect Google OAuth
-
-Done.
+*Built with ❤️ using [n8n](https://n8n.io) and [Bult.ai](https://bult.ai)*
