@@ -1,71 +1,65 @@
 {
-  "name": "My workflow 4",
   "nodes": [
     {
       "parameters": {
-        "operation": "getAll",
-        "calendar": {
-          "__rl": true,
-          "value": " ",
-          "mode": "list",
-          "cachedResultName": " "
-        },
-        "returnAll": true,
+        "content": "**This n8n workflow was deployed through bult.ai. You can easily deploy and host your workflow along with many other applications in that service**"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2192,
+        -448
+      ],
+      "id": "9d62ac50-07b7-49c5-93d9-40aab567026d",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Connect Gmail and Google Calendar\n\nIn n8n, open a Gmail node and create a new credential.\nCopy the Redirect URI shown in n8n (it will look like your Bult URL + /rest/oauth2-credential/callback).\nGo to Google Cloud Console.\n• Create a new project.\n• Go to APIs & Services → OAuth Consent Screen and fill the required info.\n• Click Create OAuth Client ID → choose Web Application.\n• Go to Credentials → copy the Client ID and Client Secret, then paste them into n8n.\n• Click Connect, sign in with Google, and approve.\nGo to Clients, pick your Client ID. Copy and paste Client ID and Client Secret from Google Cloud to N8N.\nClick Connect, sign in with your Google account, and approve the permissions. Repeat the same for Google Calendar.\nIn Google Cloud, type Gmail And Calendar into the search bar and enable their APIs.",
+        "height": 368,
+        "width": 496
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        80
+      ],
+      "id": "dbe39918-5393-4aff-a9f1-168812dae306",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Credentials you will need:\n\n1) Telegram Bot Credential\n2) OpenAI API Key\n3) Gmail, Calendar, Google tasks, Google Contacts API"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        976,
+        -224
+      ],
+      "id": "cd3d29a5-5a01-485f-8d93-e04425592b14",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
         "options": {
-          "timeMin": "={{$fromAI(\"date\",\"the date after which to fetch the messages in format YYYY-MM-DDTHH:MM:SS\")}}",
-          "fields": "=items(summary, start(dateTime))"
+          "appendAttribution": false
         }
       },
-      "id": "f180c1e9-9ce8-4d3c-9734-16582c433f62",
-      "name": "Google Calendar",
-      "type": "n8n-nodes-base.googleCalendarTool",
-      "position": [
-        2464,
-        160
-      ],
-      "typeVersion": 1.1,
-      "credentials": {
-        "googleCalendarOAuth2Api": {
-          "id": "YOUR_GOOGLE_CALENDAR_CREDENTIAL_ID",
-          "name": "Google Calendar account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Listen for incoming events').first().json.message.from.id }}"
-      },
-      "id": "b9519bf5-0694-425c-a8db-1909203a39e0",
-      "name": "Window Buffer Memory",
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "position": [
-        2224,
-        160
-      ],
-      "typeVersion": 1.2
-    },
-    {
-      "parameters": {
-        "operation": "getAll",
-        "filters": {
-          "labelIds": [
-            "INBOX",
-            "UNREAD"
-          ],
-          "readStatus": "unread",
-          "receivedAfter": "={{$fromAI(\"date\",\"the date after which to fetch the messages in format YYYY-MM-DDTHH:MM:SS\")}}"
-        }
-      },
-      "id": "734f6ffc-d5a8-4dfa-b395-abc2fcc70564",
-      "name": "Get Email",
       "type": "n8n-nodes-base.gmailTool",
-      "position": [
-        2336,
-        160
-      ],
-      "webhookId": "YOUR_WEBHOOK_ID_1",
       "typeVersion": 2.1,
+      "position": [
+        2816,
+        272
+      ],
+      "id": "da9d5d06-9dda-4f29-a5d5-3cf922bb4108",
+      "name": "Send a message in Gmail",
+      "webhookId": "YOUR_WEBHOOK_ID_1",
       "credentials": {
         "gmailOAuth2": {
           "id": "YOUR_GMAIL_CREDENTIAL_ID",
@@ -75,71 +69,106 @@
     },
     {
       "parameters": {
-        "options": {}
-      },
-      "id": "2bd1e24d-cf61-4a40-be59-cdd22b88cbd7",
-      "name": "OpenAI Chat Model",
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "position": [
-        1984,
-        176
-      ],
-      "typeVersion": 1,
-      "credentials": {
-        "openAiApi": {
-          "id": "nencvmUPFirthlJi",
-          "name": "OpenAi account"
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=You are a helpful assistant.\n\nToday's date is {{ $now }}.\n\nGuidelines:\n- When fetching emails, filter out any promotional emails. \n- When summarizing emails, include Sender, Message date, subject, and brief summary of email.\n- if the user did not specify a date in the request assume they are asking for today\n- Use Google Tasks tool for tasks\n- When answering questions about calendar events, filter out events that don't apply to the question.  For example, the question is about events for today, only reply with events for today. Don't mention future events if it's more than 1 week away\n- Write an email using gmail node if user specifies so\n- Use Google Calendar Create event to add new events\n- Use Google Contacts to create new contacts\n- When creating a new task set Due_date based on user request using this format Due_Date: 2025-12-03T20:00:00+06:00\n"
         }
-      }
+      },
+      "id": "4d3d2f63-c8be-4fc3-b4b4-77e778bacc96",
+      "name": "Bult.ai Assistant",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        2272,
+        -192
+      ],
+      "typeVersion": 1.6
     },
     {
       "parameters": {
-        "updates": [
-          "message"
-        ],
+        "operation": "getAll",
+        "task": "YOUR_TASK_LIST_ID",
+        "returnAll": "={{ $fromAI('Return_All', ``, 'boolean') }}",
         "additionalFields": {}
       },
-      "id": "1f545541-e3e3-424b-98f4-c63dbddbf6e9",
-      "name": "Listen for incoming events",
-      "type": "n8n-nodes-base.telegramTrigger",
-      "position": [
-        1296,
-        -160
-      ],
-      "webhookId": "YOUR_WEBHOOK_ID_2",
+      "type": "n8n-nodes-base.googleTasksTool",
       "typeVersion": 1,
+      "position": [
+        2672,
+        304
+      ],
+      "id": "554c34c3-c98a-4944-83ac-bf4b5c622025",
+      "name": "Get many tasks in Google Tasks",
       "credentials": {
-        "telegramApi": {
-          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
-          "name": "Telegram account 3"
+        "googleTasksOAuth2Api": {
+          "id": "YOUR_GOOGLE_TASKS_CREDENTIAL_ID",
+          "name": "Google Tasks account"
         }
       }
     },
     {
       "parameters": {
-        "chatId": "={{ $('Listen for incoming events').first().json.message.from.id }}",
-        "text": "={{ $json.output }}",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "Markdown"
-        }
+        "resource": "file",
+        "fileId": "={{ $('Listen for incoming events').item.json.message.voice.file_id }}",
+        "additionalFields": {}
       },
-      "id": "8b433a4d-5886-475e-917c-433e93c7c6fa",
-      "name": "Telegram",
+      "id": "e2e2d4b4-ab6c-4e84-8d3c-3caf61203554",
+      "name": "Get Voice File",
       "type": "n8n-nodes-base.telegram",
       "position": [
-        2736,
-        -160
+        1840,
+        -256
       ],
-      "webhookId": "YOUR_WEBHOOK_ID_3",
+      "webhookId": "YOUR_TELEGRAM_WEBHOOK_ID",
       "typeVersion": 1.1,
       "credentials": {
         "telegramApi": {
           "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
           "name": "Telegram account 3"
         }
+      }
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "text",
+              "stringValue": "={{ $json?.message?.text || \"\" }}"
+            }
+          ]
+        },
+        "options": {}
       },
-      "onError": "continueErrorOutput"
+      "id": "5d9a315a-c3b2-4fc2-9700-2c8df2e3fa2a",
+      "name": "Voice or Text",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1504,
+        -160
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "dacfd6cc-8d61-48f0-883d-5f138775f890",
+      "name": "Speech to Text",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        2016,
+        -304
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
     },
     {
       "parameters": {
@@ -177,61 +206,46 @@
     },
     {
       "parameters": {
-        "resource": "audio",
-        "operation": "transcribe",
-        "options": {}
-      },
-      "id": "dacfd6cc-8d61-48f0-883d-5f138775f890",
-      "name": "Speech to Text",
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "position": [
-        2080,
-        -160
-      ],
-      "typeVersion": 1.3,
-      "credentials": {
-        "openAiApi": {
-          "id": "YOUR_OPENAI_CREDENTIAL_ID",
-          "name": "OpenAi account"
+        "chatId": "={{ $('Listen for incoming events').first().json.message.from.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
         }
-      }
-    },
-    {
-      "parameters": {
-        "fields": {
-          "values": [
-            {
-              "name": "text",
-              "stringValue": "={{ $json?.message?.text || \"\" }}"
-            }
-          ]
-        },
-        "options": {}
       },
-      "id": "5d9a315a-c3b2-4fc2-9700-2c8df2e3fa2a",
-      "name": "Voice or Text",
-      "type": "n8n-nodes-base.set",
-      "position": [
-        1504,
-        -160
-      ],
-      "typeVersion": 3.2
-    },
-    {
-      "parameters": {
-        "resource": "file",
-        "fileId": "={{ $('Listen for incoming events').item.json.message.voice.file_id }}",
-        "additionalFields": {}
-      },
-      "id": "e2e2d4b4-ab6c-4e84-8d3c-3caf61203554",
-      "name": "Get Voice File",
+      "id": "8b433a4d-5886-475e-917c-433e93c7c6fa",
+      "name": "Telegram",
       "type": "n8n-nodes-base.telegram",
       "position": [
-        1840,
+        2736,
         -160
       ],
-      "webhookId": "YOUR_WEBHOOK_ID_4",
+      "webhookId": "YOUR_TELEGRAM_WEBHOOK_ID_2",
       "typeVersion": 1.1,
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram account 3"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "1f545541-e3e3-424b-98f4-c63dbddbf6e9",
+      "name": "Listen for incoming events",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        1296,
+        -160
+      ],
+      "webhookId": "YOUR_TELEGRAM_WEBHOOK_ID_3",
+      "typeVersion": 1,
       "credentials": {
         "telegramApi": {
           "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
@@ -241,16 +255,114 @@
     },
     {
       "parameters": {
-        "additionalFields": {}
+        "options": {}
+      },
+      "id": "2bd1e24d-cf61-4a40-be59-cdd22b88cbd7",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1984,
+        176
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Listen for incoming events').first().json.message.from.id }}"
+      },
+      "id": "b9519bf5-0694-425c-a8db-1909203a39e0",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        2192,
+        256
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "your_email@example.com",
+          "mode": "list",
+          "cachedResultName": "your_email@example.com"
+        },
+        "options": {
+          "timeMin": "={{$fromAI(\"date\",\"the date after which to fetch the messages in format YYYY-MM-DDTHH:MM:SS\")}}",
+          "fields": "=items(summary, start(dateTime))"
+        }
+      },
+      "id": "0ade1b0a-b368-4857-8f7c-7cc94d166520",
+      "name": "Google Calendar",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        2288,
+        576
+      ],
+      "typeVersion": 1.1,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YOUR_GOOGLE_CALENDAR_CREDENTIAL_ID",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "filters": {
+          "labelIds": [
+            "INBOX",
+            "UNREAD"
+          ],
+          "readStatus": "both",
+          "receivedAfter": "={{$fromAI(\"date\",\"the date after which to fetch the messages in format YYYY-MM-DDTHH:MM:SS\")}}"
+        }
+      },
+      "id": "24e57f0f-2b3f-4fc1-a4fd-e31c27e72b14",
+      "name": "Get Email",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        2352,
+        336
+      ],
+      "webhookId": "YOUR_GMAIL_WEBHOOK_ID",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": "={{ $fromAI('Return_All', ``, 'boolean') }}",
+        "fields": [
+          "emailAddresses",
+          "phoneNumbers",
+          "addresses",
+          "birthdays"
+        ],
+        "options": {}
       },
       "type": "n8n-nodes-base.googleContactsTool",
       "typeVersion": 1,
       "position": [
-        2720,
-        160
+        2992,
+        256
       ],
-      "id": "359e39ca-0fdf-422e-9a32-776ce23669fc",
-      "name": "Create a contact in Google Contacts",
+      "id": "b531feda-0e48-49e1-a2af-4cfea06ad892",
+      "name": "Get many contacts in Google Contacts1",
       "credentials": {
         "googleContactsOAuth2Api": {
           "id": "YOUR_GOOGLE_CONTACTS_CREDENTIAL_ID",
@@ -260,46 +372,183 @@
     },
     {
       "parameters": {
-        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "your_email@example.com",
+          "mode": "list",
+          "cachedResultName": "your_email@example.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        2496,
+        544
+      ],
+      "id": "1d387531-3e83-4899-b821-620de97f0250",
+      "name": "Create an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YOUR_GOOGLE_CALENDAR_CREDENTIAL_ID",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "familyName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Family_Name', ``, 'string') }}",
+        "additionalFields": {
+          "addressesUi": {
+            "addressesValues": {
+              "streetAddress": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Street_Address', ``, 'string') }}",
+              "city": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('City', ``, 'string') }}",
+              "region": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Region', ``, 'string') }}",
+              "countryCode": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Country_Code', ``, 'string') }}",
+              "postalCode": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Postal_Code', ``, 'string') }}",
+              "type": "home"
+            }
+          },
+          "birthday": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Birthday', ``, 'string') }}",
+          "companyUi": {
+            "companyValues": [
+              {
+                "current": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('companyValues0_Current', ``, 'boolean') }}",
+                "domain": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('companyValues0_Domain', ``, 'string') }}",
+                "name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('companyValues0_Name', ``, 'string') }}",
+                "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('companyValues0_Title', ``, 'string') }}"
+              }
+            ]
+          },
+          "emailsUi": {
+            "emailsValues": [
+              {
+                "type": "other",
+                "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('emailsValues0_Value', ``, 'string') }}"
+              }
+            ]
+          },
+          "phoneUi": {
+            "phoneValues": [
+              {
+                "type": "mobile",
+                "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('phoneValues0_Value', ``, 'string') }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        2800,
+        496
+      ],
+      "id": "095693ae-d7f6-4d98-a442-1a8b7bc0752d",
+      "name": "Create a contact in Google Contacts",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "lxWiyAmwViRH5Kz6",
+          "name": "Google Contacts account"
+        }
+      }
+    },
+    {
+      "parameters": {
         "task": "YOUR_TASK_LIST_ID",
-        "returnAll": true,
-        "additionalFields": {}
+        "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', ``, 'string') }}",
+        "additionalFields": {
+          "dueDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Due_Date', ``, 'string') }}"
+        }
       },
       "type": "n8n-nodes-base.googleTasksTool",
       "typeVersion": 1,
       "position": [
-        2608,
-        176
+        2656,
+        672
       ],
-      "id": "554c34c3-c98a-4944-83ac-bf4b5c622025",
-      "name": "Get many tasks in Google Tasks",
+      "id": "66932162-1009-4824-89d7-3db9e2d1a861",
+      "name": "Create a task in Google Tasks",
       "credentials": {
         "googleTasksOAuth2Api": {
           "id": "YOUR_GOOGLE_TASKS_CREDENTIAL_ID",
           "name": "Google Tasks account"
         }
       }
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.text }}",
-        "options": {
-          "systemMessage": "=You are a helpful assistant.\n\nToday's date is {{ $now }}.\n\nGuidelines:\n- When fetching emails, filter out any promotional emails. \n- When summarizing emails, include Sender, Message date, subject, and brief summary of email.\n- if the user did not specify a date in the request assume they are asking for today\n- Use Google Tasks tool for tasks\n- When answering questions about calendar events, filter out events that don't apply to the question.  For example, the question is about events for today, only reply with events for today. Don't mention future events if it's more than 1 week away"
-        }
-      },
-      "id": "4d3d2f63-c8be-4fc3-b4b4-77e778bacc96",
-      "name": "Bult.ai Assistant",
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "position": [
-        2240,
-        -160
-      ],
-      "typeVersion": 1.6
     }
   ],
-  "pinData": {},
   "connections": {
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Bult.ai Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bult.ai Assistant": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many tasks in Google Tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "Bult.ai Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Voice File": {
+      "main": [
+        [
+          {
+            "node": "Speech to Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voice or Text": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Speech to Text": {
+      "main": [
+        [
+          {
+            "node": "Bult.ai Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "If": {
       "main": [
         [
@@ -318,56 +567,12 @@
         ]
       ]
     },
-    "Get Email": {
-      "ai_tool": [
-        [
-          {
-            "node": "Bult.ai Assistant",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Voice or Text": {
+    "Listen for incoming events": {
       "main": [
         [
           {
-            "node": "If",
+            "node": "Voice or Text",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Voice File": {
-      "main": [
-        [
-          {
-            "node": "Speech to Text",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Speech to Text": {
-      "main": [
-        [
-          {
-            "node": "Bult.ai Assistant",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Calendar": {
-      "ai_tool": [
-        [
-          {
-            "node": "Bult.ai Assistant",
-            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -395,12 +600,45 @@
         ]
       ]
     },
-    "Listen for incoming events": {
-      "main": [
+    "Google Calendar": {
+      "ai_tool": [
         [
           {
-            "node": "Voice or Text",
-            "type": "main",
+            "node": "Bult.ai Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Bult.ai Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many contacts in Google Contacts1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Bult.ai Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "Bult.ai Assistant",
+            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -417,7 +655,7 @@
         ]
       ]
     },
-    "Get many tasks in Google Tasks": {
+    "Create a task in Google Tasks": {
       "ai_tool": [
         [
           {
@@ -427,28 +665,11 @@
           }
         ]
       ]
-    },
-    "Bult.ai Assistant": {
-      "main": [
-        [
-          {
-            "node": "Telegram",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
-  "active": false,
-  "settings": {
-    "executionOrder": "v1"
-  },
-  "versionId": "YOUR_VERSION_ID",
+  "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "YOUR_INSTANCE_ID"
-  },
-  "id": "YOUR_WORKFLOW_ID",
-  "tags": []
+  }
 }
