@@ -22,6 +22,8 @@ Transform your Telegram bot into a powerful AI assistant that seamlessly manages
 2. Navigate to **Dashboard** → **New Project** → choose any name
 3. Select **Create** → **Templates** → **n8n**
 4. Click **Apply** → **Deploy**
+5. Click on the n8n node and copy the URL under Public Access. Then go to Environmet tab and press Add Variable. 
+On the left side write WEBHOOK_URL, on the right side paste the URL you just copied. Click Save and Deploy.
 5. Open your n8n URL (e.g., `https://your-project.fin1.bult.app/`)
 6. Register and verify using the email code
 
